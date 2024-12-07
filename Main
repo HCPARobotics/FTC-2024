@@ -33,7 +33,7 @@ public class MainControl extends LinearOpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "RD"); // Right Drive
         wrist = hardwareMap.get(DcMotor.class, "W"); // Wrist
         armMotor = hardwareMap.get(DcMotor.class, "AM"); // Arm
-        standardServo = hardwareMap.get(Servo.class, "S"); // Claw Servo
+        standardServo = hardwareMap.get(Servo.class, "SF"); // Claw Servo
         continuousServo = hardwareMap.get(CRServo.class, "CR"); // Intake Servo
 
         // Directions
@@ -54,10 +54,8 @@ public class MainControl extends LinearOpMode {
         // Brake
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Edit this if needed
-        wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -95,16 +93,16 @@ public class MainControl extends LinearOpMode {
             // Claw
             if (gamepad2.left_trigger > 0.5 && !leftpres) {
                 servost = !servost;
-                standardServo.setPosition(servost ? 1.0 : 0.0); // Toggles between open (1.0) and close (0.0)
+                standardServo.setPosition(servost ? 1.0 : 0.0); 
             }
             leftpres = gamepad2.left_trigger > 0.5;
 
-            // Intake behavior
+            // Intake 
             // Left Trigger: Reverse the intake direction
             if (gamepad2.left_trigger > 0.5 && !rightpres) {
                 continust = true;  // Reverse direction
             }
-            // Left Bumper: Stop and change to forward direction
+            // Left Bumper
             if (gamepad2.left_bumper && !leftpres) {
                 continust = false; // Change to forward
             }
@@ -112,7 +110,6 @@ public class MainControl extends LinearOpMode {
             leftpres = gamepad2.left_bumper;
             rightpres = gamepad2.left_trigger > 0.5;
 
-            // Set intake motor power
             continuousServo.setPower(continust ? -1.0 : 1.0);  // Reverse if continust is true, otherwise forward
         }
     }
