@@ -1,3 +1,4 @@
+//Code used for testing
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,14 +8,15 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TELEOP", group = "HC")
 public class MainControl extends LinearOpMode {
-//Add extra devices here
+    //Add extra devices here
     private DcMotor leftDrive;
     private DcMotor rightDrive;
     private DcMotor wrist;
     private DcMotor armMotor;
     private Servo standardServo;
     private CRServo continuousServo;
-//dont touch this 
+
+    //dont touch this 
     private boolean leftpres = false;
     private boolean rightpres = false;
     private boolean servost = false;
@@ -26,7 +28,7 @@ public class MainControl extends LinearOpMode {
     private final int ARM_ROTATION_LIMIT = 1440; // 360 ticks per rotation
 
     @Override
-//Config File
+    //Config File
     public void runOpMode() throws InterruptedException {
         leftDrive = hardwareMap.get(DcMotor.class, "LD"); //Left Drive
         rightDrive = hardwareMap.get(DcMotor.class, "RD"); //Right Drive
@@ -34,7 +36,8 @@ public class MainControl extends LinearOpMode {
         armMotor = hardwareMap.get(DcMotor.class, "AM"); //Arm
         standardServo = hardwareMap.get(Servo.class, "S"); //Claw Servo
         continuousServo = hardwareMap.get(CRServo.class, "CR"); //Intake Servo
-//Directions
+
+        //Directions
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         wrist.setDirection(DcMotor.Direction.FORWARD);
@@ -42,25 +45,25 @@ public class MainControl extends LinearOpMode {
         standardServo.setDirection(Servo.Direction.FORWARD);
         continuousServo.setDirection(CRServo.Direction.FORWARD);
 
-//Encoders
+        //Encoders
         wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         wrist.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//Brake
+        //Brake
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//Edit this if needed
+        //Edit this if needed
         wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         waitForStart();
 
         while (opModeIsActive()) {
-	//Drive
+            //Drive
             double drive = -gamepad1.left_stick_y;
             double turn = gamepad1.right_stick_x;
 
@@ -69,7 +72,8 @@ public class MainControl extends LinearOpMode {
 
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
-	//Wrist
+
+            //Wrist
             int wristPosition = wrist.getCurrentPosition();
             if (gamepad2.a && wristPosition < WRIST_MAX_POSITION) {
                 wrist.setPower(1.0);
@@ -78,7 +82,8 @@ public class MainControl extends LinearOpMode {
             } else {
                 wrist.setPower(0.0);
             }
-	//Arm
+
+            //Arm
             int armPosition = armMotor.getCurrentPosition();
             if (gamepad2.x && Math.abs(armPosition) < ARM_ROTATION_LIMIT) {
                 armMotor.setPower(1.0);
@@ -87,18 +92,20 @@ public class MainControl extends LinearOpMode {
             } else {
                 armMotor.setPower(0.0);
             }
-	//Claw
+
+            //Claw
             if (gamepad2.left_trigger > 0.5 && !leftpres) {
                 servost = !servost;
-                standardServo.setPosition(servost ? 1.0 : 0.0);
+                standardServo.setPosition(servost ? 1.0 : 0.0); 
             }
             leftpres = gamepad2.left_trigger > 0.5;
-	//Intake
+
+            //Intake - Now spins continuously and reverses on trigger press
             if (gamepad2.right_trigger > 0.5 && !rightpres) {
-                continust = !continust;
-                continuousServo.setPower(continust ? 1.0 : 0.0);
+                continust = !continust; // Toggle intake direction when top trigger is pressed
             }
             rightpres = gamepad2.right_trigger > 0.5;
+            continuousServo.setPower(continust ? 1.0 : -1.0); 
         }
     }
 }
