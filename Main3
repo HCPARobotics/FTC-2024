@@ -99,11 +99,11 @@ public class MainControl extends LinearOpMode {
             }
             leftpres = gamepad2.left_trigger > 0.5;
 
-            //Intake - Now spins continuously and reverses on trigger press
-            if (gamepad2.right_trigger > 0.5 && !rightpres) {
-                continust = !continust; // Toggle intake direction when top trigger is pressed
+            //Intake - Uses the left bumper to reverse the intake direction
+            if (gamepad2.left_bumper && !leftpres) {
+                continust = !continust; // Toggle intake direction when left bumper is pressed
             }
-            rightpres = gamepad2.right_trigger > 0.5;
+            leftpres = gamepad2.left_bumper;
             continuousServo.setPower(continust ? 1.0 : -1.0);  // Continuous spinning, reverses direction when toggled
         }
     }
