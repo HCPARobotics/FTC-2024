@@ -95,7 +95,7 @@ public class MainControl extends LinearOpMode {
             //Claw
             if (gamepad2.left_trigger > 0.5 && !leftpres) {
                 servost = !servost;
-                standardServo.setPosition(servost ? 1.0 : 0.0);
+                standardServo.setPosition(servost ? 1.0 : 0.0); // Toggles between open (1.0) and close (0.0)
             }
             leftpres = gamepad2.left_trigger > 0.5;
 
