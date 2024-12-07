@@ -1,3 +1,4 @@
+//Main code for HCPA FTC 24-25
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,15 +16,15 @@ public class MainControl extends LinearOpMode {
     private Servo standardServo;
     private CRServo continuousServo;
 
-    //dont touch this 
+    //States
     private boolean leftpres = false;
     private boolean rightpres = false;
     private boolean servost = false;
     private boolean continust = false;
 
-    // EDIT THIS, encoder counts in ticks for whatever reason
-    private final int WRIST_MIN_POSITION = -1000; // 360 ticks per rotation
-    private final int WRIST_MAX_POSITION = 1000; //  360 ticks per rotation
+    //Max angle
+    private final int WRIST_MIN_POSITION = -10000; // 360 ticks per rotation
+    private final int WRIST_MAX_POSITION = 10000; //  360 ticks per rotation
     private final int ARM_ROTATION_LIMIT = 1440; // 360 ticks per rotation
 
     @Override
@@ -54,13 +55,11 @@ public class MainControl extends LinearOpMode {
         //Brake
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //Edit this if needed
-        wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
-
+        //Main Code
         while (opModeIsActive()) {
             //Drive
             double drive = -gamepad1.left_stick_y;
@@ -95,16 +94,16 @@ public class MainControl extends LinearOpMode {
             //Claw
             if (gamepad2.left_trigger > 0.5 && !leftpres) {
                 servost = !servost;
-                standardServo.setPosition(servost ? 1.0 : 0.0); // Toggles between open (1.0) and close (0.0)
+                standardServo.setPosition(servost ? 1.0 : 0.0); 
             }
             leftpres = gamepad2.left_trigger > 0.5;
 
             //Intake - Uses the left bumper to reverse the intake direction
             if (gamepad2.left_bumper && !leftpres) {
-                continust = !continust; // Toggle intake direction when left bumper is pressed
+                continust = !continust; 
             }
             leftpres = gamepad2.left_bumper;
-            continuousServo.setPower(continust ? 1.0 : -1.0);  // Continuous spinning, reverses direction when toggled
+            continuousServo.setPower(continust ? 1.0 : -1.0); 
         }
     }
 }
