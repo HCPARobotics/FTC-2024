@@ -34,7 +34,7 @@ public class MainControl extends LinearOpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "RD"); //Right Drive
         wrist = hardwareMap.get(DcMotor.class, "W"); //Wrist
         armMotor = hardwareMap.get(DcMotor.class, "AM"); //Arm
-        standardServo = hardwareMap.get(Servo.class, "S"); //Claw Servo
+        standardServo = hardwareMap.get(Servo.class, "SF"); //Claw Servo
         continuousServo = hardwareMap.get(CRServo.class, "CR"); //Intake Servo
 
         //Directions
